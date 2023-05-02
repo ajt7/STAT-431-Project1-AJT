@@ -64,7 +64,6 @@ server <- function(input, output) {
 
     output$salaryPlot <- renderPlotly({
       if(input$dataset == dataChoices[1]){
-        
         datByDegrees %>%
           plot_ly(x = ~.data[[input$response]], color = ~`Undergraduate Major`, type = "box",
                   boxpoints = "all", jitter = 0.7, alpha = 0.5, pointpos = 0,
@@ -87,9 +86,13 @@ server <- function(input, output) {
                  legend = list(title=list(text='Type of College')))
       } else if(input$dataset == dataChoices[3]){
         
-        # Example plot of salaries by region (insert your plot here)
-        datByRegion %>% ggplot(aes(x = Region, y = .data[[input$response]])) + 
-          geom_boxplot()
+        plot_ly(datByRegion, x = ~.data[[input$response]], color = ~Region,
+                                type = "box", boxpoints = "all", jitter = 0.7,
+                                alpha = 0.5, pointpos = 0, text = ~`School Name`) %>%
+          layout(title = 'Salary Determined by Region', 
+                 xaxis = list(title = input$response), 
+                 yaxis = list(title = ' '), 
+                 legend = list(title=list(text='Region')))
         
       }
     })
