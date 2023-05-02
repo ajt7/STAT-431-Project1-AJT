@@ -10,6 +10,7 @@
 library(shiny)
 library(tidyverse)
 library(here)
+library(plotly)
 
 datByDegreesUnclean <- read_csv(here("Project1/degrees-that-pay-back.csv"))
 datByCollegeUnclean <- read_csv(here("Project1/salaries-by-college-type.csv"))
@@ -61,24 +62,27 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$salaryPlot <- renderPlot({
+    output$salaryPlot <- renderPlotly({
       if(input$dataset == dataChoices[1]){
         
         # Example plot of salaries by degree (insert your plot here)
-        datByDegrees %>% ggplot(aes(x = `Undergraduate Major`, y = .data[[input$response]])) +
-          geom_point()
+        datByDegrees %>% plot_ly(x = ~.data[[input$response]], 
+                                 y = ~`Undergraduate Major`,
+                                 type = "scatter")
         
-      } else if(input$dataset == dataChoices[2]){
+      } 
+      if(input$dataset == dataChoices[2]){
         
         # Example plot of salaries by college type (insert your plot here)
-        datByCollege %>% ggplot(aes(x = `School Type`, y = .data[[input$response]])) + 
-          geom_boxplot()
+        plot_ly(datByCollege, x = ~.data[[input$response]], y = ~`School Type`,
+                                    type = "box") 
         
       } else if(input$dataset == dataChoices[3]){
         
         # Example plot of salaries by region (insert your plot here)
-        datByRegion %>% ggplot(aes(x = Region, y = .data[[input$response]])) + 
-          geom_boxplot()
+        plot_ly(datByRegion, x = ~.data[[input$response]], color = ~Region,
+                                type = "box", boxpoints = "all", jitter = 0.7,
+                                alpha = 0.5, pointpos = 0, text = ~`School Name`) 
         
       }
     })
