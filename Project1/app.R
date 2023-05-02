@@ -77,11 +77,14 @@ server <- function(input, output) {
         
         
       } else if(input$dataset == dataChoices[2]){
-        
-        # Example plot of salaries by college type (insert your plot here)
-        datByCollege %>% ggplot(aes(x = `School Type`, y = .data[[input$response]])) + 
-          geom_boxplot()
-        
+              datByCollege %>%
+          plot_ly(x = ~.data[[input$response]], color = ~`School Type`, type = "box", 
+                  boxpoints = "all", jitter = 0.7, alpha = 0.5, pointpos = 0,
+                  text = ~`School Name`) |>
+          layout(title = 'Salary Determined by Type of College', 
+                 xaxis = list(title = input$response), 
+                 yaxis = list(title = ' '), 
+                 legend = list(title=list(text='Type of College')))
       } else if(input$dataset == dataChoices[3]){
         
         # Example plot of salaries by region (insert your plot here)
