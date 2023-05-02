@@ -68,7 +68,12 @@ server <- function(input, output) {
         datByDegrees %>%
           plot_ly(x = ~.data[[input$response]], color = ~`Undergraduate Major`, type = "box",
                   boxpoints = "all", jitter = 0.7, alpha = 0.5, pointpos = 0,
-                  text = ~`Undergraduate Major`)
+                  text = ~`Undergraduate Major`) %>%
+          layout(title = 'Median Salary by Undergraduate Degree', 
+                 xaxis = list(title = input$response), 
+                 yaxis = list(showticklabels = FALSE, title = 'Undergaduate Degrees' ),
+                 legend = list(title=list(text='<b> Degrees: </b>')))
+        
         
         
       } else if(input$dataset == dataChoices[2]){
