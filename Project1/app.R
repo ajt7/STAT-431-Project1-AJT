@@ -10,6 +10,7 @@
 library(shiny)
 library(tidyverse)
 library(here)
+library(plotly)
 
 datByDegreesUnclean <- read_csv(here("Project1/degrees-that-pay-back.csv"))
 datByCollegeUnclean <- read_csv(here("Project1/salaries-by-college-type.csv"))
@@ -53,7 +54,7 @@ ui <- fluidPage(
 
         # Show the plot
         mainPanel(
-           plotOutput("salaryPlot")
+           plotlyOutput("salaryPlot")
         )
     )
 )
@@ -61,12 +62,14 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$salaryPlot <- renderPlot({
+    output$salaryPlot <- renderPlotly({
       if(input$dataset == dataChoices[1]){
         
-        # Example plot of salaries by degree (insert your plot here)
-        datByDegrees %>% ggplot(aes(x = `Undergraduate Major`, y = .data[[input$response]])) +
-          geom_point()
+        datByDegrees %>%
+          plot_ly(x = ~.data[[input$response]], color = ~`Undergraduate Major`, type = "box",
+                  boxpoints = "all", jitter = 0.7, alpha = 0.5, pointpos = 0,
+                  text = ~`Undergraduate Major`)
+        
         
       } else if(input$dataset == dataChoices[2]){
         
